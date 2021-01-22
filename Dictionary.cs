@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 using ProfanityFilter;
+using System.Collections;
 using System.Threading.Tasks;
 using System.IO;
 using TShockAPI;
@@ -1634,7 +1635,7 @@ namespace ChatFilter
         public static readonly string FilePath = Path.Combine(TShock.SavePath, "chatfilter-dict.json");
 
 
-        public List<string> BannedWords { get; set; }
+        public HashSet<string> BannedWords { get; set; }
 
         public bool CheckRegistered { get; set; }
 
@@ -1650,7 +1651,7 @@ namespace ChatFilter
             {
                 dict = new ProfanityDictionary();
 
-                dict.BannedWords = DefaultBadWords.ToList();  // i shudder at the thought of turning this array into a list
+                dict.BannedWords = new HashSet<string>(DefaultBadWords);  // i shudder at the thought of turning this array into a list
                 dict.CheckRegistered = true;
 
                 dict.Write();

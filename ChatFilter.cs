@@ -35,11 +35,11 @@ namespace ChatFilter
         {
             PlayerHooks.PlayerChat += OnChat;
 
-            _dict = ProfanityDictionary.Read();
-            _filter = new ProfanityFilter.ProfanityFilter(_dict.BannedWords);
+            Reload();
 
             Commands.ChatCommands.Add(new Command("chatfilter.admin", Profanity, "chatfilter", "cf"));
             Commands.ChatCommands.Add(new Command("chatfilter.admin", ToggleRegisteredUserCheck, "cfcheck"));
+            Commands.ChatCommands.Add(new Command("chatfilter.admin", ReloadConfig, "cfreload"));
         }
 
         private void OnChat(PlayerChatEventArgs args)
@@ -87,9 +87,16 @@ namespace ChatFilter
 
                     string badWord = string.Join(" ", args.Parameters.Skip(1));
 
-                    AddNewProfanity(badWord);
+                    bool added = AddNewProfanity(badWord);
 
-                    args.Player.SendSuccessMessage($"Successfully added {badWord} as profanity.");
+                    if (added)
+                    {
+                        args.Player.SendSuccessMessage($"Successfully added {badWord} as profanity.");
+                    }
+                    else
+                    {
+                        args.Player.SendErrorMessage("Profanity list already contains this word.");
+                    }
                 }
                     break;
                 case "delete":
@@ -123,7 +130,7 @@ namespace ChatFilter
                         return;
                     }
 
-                    PaginationTools.SendPage(args.Player, pg, _dict.BannedWords,
+                    PaginationTools.SendPage(args.Player, pg, _dict.BannedWords, _dict.BannedWords.Count,
                        new PaginationTools.Settings
                        {
                            HeaderFormat = "Profanity List ({0}/{1})",
@@ -142,11 +149,26 @@ namespace ChatFilter
             args.Player.SendSuccessMessage($"{(_dict.CheckRegistered ? "En" : "Dis")}abled checking registered users for profanity.");
         }
 
-        private void AddNewProfanity(string badWord)
+        private void ReloadConfig(CommandArgs args)
         {
-            _dict.BannedWords.Add(badWord);
+            Reload();
+
+            args.Player.SendSuccessMessage("Successfully reloaded profanity filter config.");
+        }
+
+        private void Reload()
+        {
+            _dict = ProfanityDictionary.Read();
+            _filter = new ProfanityFilter.ProfanityFilter(_dict.BannedWords.ToArray());
+        }
+
+        private bool AddNewProfanity(string badWord)
+        {
+            bool added = _dict.BannedWords.Add(badWord);
             _filter.AddProfanity(badWord);
             _dict.Write();
+
+            return added;
         }
     }
 }
