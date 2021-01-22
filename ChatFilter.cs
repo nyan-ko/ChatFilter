@@ -12,6 +12,7 @@ using TShockAPI.Hooks;
 
 namespace ChatFilter
 {
+    [ApiVersion(2, 1)]
     public class ChatFilter : TerrariaPlugin
     {
         #region Plugin info
@@ -45,14 +46,15 @@ namespace ChatFilter
         {
             var plr = args.Player;
 
-            TShock.Utils.Broadcast(plr.Group?.Name ?? "null", Color.Red);
-
-            if ((plr.Group?.Name ?? "") != "" && !_dict.CheckRegistered)
+            if ((plr.Group?.Name ?? "") != "1" && !_dict.CheckRegistered)
             {
                 return;
             }
 
-            args.RawText = _filter.CensorString(args.RawText);
+            // changing args.RawText won't do anything as the formatted text is already made before this method is called(?)
+            // either way, we have to find the message sent by the player, then add a filtered version of that onto the rest of the message.
+            int raw = args.TShockFormattedText.LastIndexOf(args.RawText);
+            args.TShockFormattedText = args.TShockFormattedText.Substring(0, raw) + _filter.CensorString(args.RawText);
         }
 
         private void Profanity(CommandArgs args)
@@ -72,7 +74,7 @@ namespace ChatFilter
                         "/cfcheck - Toggles filtering messages from registered users."
                     };
 
-                    PaginationTools.SendPage(args.Player, 0, help);
+                    args.Player.SendInfoMessage(string.Join("\n", help));
                 }
                     break;
                 case "add":
@@ -116,7 +118,7 @@ namespace ChatFilter
                     break;
                 case "list":
                 {
-                    if (PaginationTools.TryParsePageNumber(args.Parameters, 2, args.Player, out int pg))
+                    if (!PaginationTools.TryParsePageNumber(args.Parameters, 1, args.Player, out int pg))
                     {
                         return;
                     }
