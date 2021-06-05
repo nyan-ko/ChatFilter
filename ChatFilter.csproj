@@ -37,8 +37,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="OTAPI">
-      <HintPath>..\..\..\Documents\old desktop\terraria backup\1.4\1.4.0.5\tshock stuff\TShock4.4.0_Pre11_Terraria1.4.0.5\OTAPI.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\..\Documents\References\OTAPI.dll</HintPath>
     </Reference>
     <Reference Include="ProfanityFilter, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\Profanity.Detector.0.1.8\lib\netstandard2.0\ProfanityFilter.dll</HintPath>
@@ -52,12 +51,10 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="TerrariaServer">
-      <HintPath>..\..\..\Documents\GitHub\tbc-tshock\AegisAPI\bin\Debug\TerrariaServer.exe</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\..\Documents\References\TerrariaServer.exe</HintPath>
     </Reference>
     <Reference Include="TShockAPI">
-      <HintPath>..\..\..\Documents\old desktop\terraria backup\1.4\1.4.0.5\tshock stuff\TShock4.4.0_Pre11_Terraria1.4.0.5\ServerPlugins\TShockAPI.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\..\Documents\References\TShockAPI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
